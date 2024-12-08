@@ -1,125 +1,86 @@
 package org.pedro.repository.imp;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceException;
 import org.pedro.connection.ConnectionFactory;
 import org.pedro.domain.Course;
 import org.pedro.repository.ICourseRepository;
+import org.pedro.repository.TransactionFunction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class CourseRepository implements ICourseRepository {
+
+    private static final Logger LOGGER = Logger.getLogger(CourseRepository.class.getName());
 
 
     @Override
     public void save(Course course) {
 
-        EntityManager em = ConnectionFactory.getEntityManagerFactory();
-
-        try {
-            em.getTransaction().begin();
-
+        executeTransaction(em -> {
             em.persist(course);
+            return null;
+        });
 
-            em.getTransaction().commit();
-
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-
-        } finally {
-                em.close();
-
-        }
     }
 
     @Override
     public void update(Course course) {
 
-        EntityManager em = ConnectionFactory.getEntityManagerFactory();
-        try {
-            em.getTransaction().begin();
+        executeTransaction(em -> {
             em.merge(course);
-
-            em.getTransaction().commit();
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-
-            if (em.getTransaction().isActive()){
-                em.getTransaction().rollback();
-            }
-        } finally {
-                em.close();
-        }
+            return null;
+        });
     }
 
     @Override
     public boolean removeById(Integer integer) {
 
-        EntityManager em = ConnectionFactory.getEntityManagerFactory();
+        AtomicBoolean isBoolean = new AtomicBoolean(false);
 
-        boolean isRemoved = false;
-
-        try{
-
-            em.getTransaction().begin();
-
+        executeTransaction((EntityManager em) -> {
             Course course = em.find(Course.class, integer);
 
-            if(course!= null){
+            if (course != null) {
                 em.remove(course);
-                isRemoved = true;
-
-            }else{
-                throw new NullPointerException("Course not foundwith id: " + integer);
+                isBoolean.set(true);
+            } else {
+                throw new EntityNotFoundException("Course not found with id : " + integer);
             }
-
-            em.getTransaction().commit();
-
-
-        } catch (PersistenceException e) {
-            e.printStackTrace();
-
-            if (em.getTransaction().isActive()){
-                em.getTransaction().rollback();
-            }
-
-
-        } finally {
-                em.close();
-        }
-
-        return isRemoved;
+            return null;
+        });
+        return isBoolean.get();
     }
+
 
     @Override
     public Optional<Course> findById(Integer integer) {
 
         EntityManager em = ConnectionFactory.getEntityManagerFactory();
-        Optional<Course> course = null;
-        try {
+
+        Optional<Course> courseOptional = Optional.empty();
+
+        try{
 
             Course courseSearched = em.find(Course.class, integer);
 
-           course = Optional.ofNullable(courseSearched);
+            courseOptional = Optional.ofNullable(courseSearched);
 
-            return course;
-
-
-        } catch (PersistenceException e) {
+        }catch (PersistenceException e){
             e.printStackTrace();
 
-        } finally {
-                em.close();
+        }finally {
+            em.close();
         }
 
-        return course;
+        return courseOptional;
+
+
     }
 
 
@@ -131,11 +92,7 @@ public class CourseRepository implements ICourseRepository {
             List<Course> courses = new ArrayList<>();
 
         try{
-
             String listALlQuery = "SELECT c FROM Course c";
-
-            em.getTransaction().begin();
-
 
            courses = em.createQuery(listALlQuery, Course.class).getResultList();
 
@@ -146,7 +103,31 @@ public class CourseRepository implements ICourseRepository {
         }finally {
             em.close();
         }
-
         return courses;
+    }
+
+    private <T> T executeTransaction(TransactionFunction<T> function) {
+        EntityManager em = ConnectionFactory.getEntityManagerFactory();
+
+
+
+        try {
+            em.getTransaction().begin();
+
+           T result = function.apply(em);
+
+            em.getTransaction().commit();
+
+            return result;
+        } catch (PersistenceException e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            LOGGER.severe("Erro executing transaction " + e.getMessage());
+            throw e;
+
+        } finally {
+            em.close();
+        }
     }
 }
