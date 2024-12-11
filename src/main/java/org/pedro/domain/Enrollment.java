@@ -1,11 +1,15 @@
 package org.pedro.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class Enrollment {
+@Data
+@NoArgsConstructor
+public class  Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

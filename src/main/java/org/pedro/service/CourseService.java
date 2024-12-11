@@ -1,10 +1,10 @@
 package org.pedro.service;
 
-import jakarta.persistence.EntityManager;
+
 import jakarta.persistence.EntityNotFoundException;
-import org.pedro.connection.ConnectionFactory;
 import org.pedro.domain.Course;
-import org.pedro.repository.imp.CourseRepository;
+import org.pedro.repository.ICourseRepository;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +16,9 @@ public class CourseService {
 
     private static final Logger LOGGER = Logger.getLogger(CourseService.class.getName());
 
-    private CourseRepository courseRepository;
+    private ICourseRepository courseRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(ICourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
@@ -58,7 +58,7 @@ public class CourseService {
         courseRepository.findById(integer).
                 orElseThrow(() -> {
                     LOGGER.warning("Attepted to remove a course with id  " + integer + " , but no such course exits ");
-                    return new EntityNotFoundException("Course not found with id " + integer);
+                    return new EntityNotFoundException("Course is null");
                 });
 
         courseRepository.removeById(integer);

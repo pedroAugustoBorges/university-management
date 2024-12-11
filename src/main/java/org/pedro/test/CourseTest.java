@@ -8,7 +8,7 @@ import org.pedro.service.CourseService;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class ConnectionFactoryTest {
+public class CourseTest {
 
     private static final Logger LOGGER = Logger.getLogger(ConnectionFactory.class.getName());
 
@@ -30,9 +30,9 @@ public class ConnectionFactoryTest {
 //
 //        System.out.println(courses);
 
-        boolean removed = courseService.removeById(2);
+        boolean removed = courseService.removeById(3);
 
-        System.out.println(removed);
+
 //
     }
 }

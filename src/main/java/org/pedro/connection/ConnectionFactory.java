@@ -5,21 +5,58 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class ConnectionFactory {
 
-    public static final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("myPU");
+    private static final String PERSISTENCE_UNIT_NAME = "myPU";
 
-    public static EntityManager getEntityManagerFactory (){
+    private static EntityManagerFactory entityManagerFactory;
 
-        EntityManager entityManager = null;
+    private static final Logger LOGGER = Logger.getLogger(ConnectionFactory.class.getName());
 
-        try {
-            entityManager = EMF.createEntityManager();
-        }catch (PersistenceException e){
-            throw new RuntimeException("Error creating EntityManager", e);
-        }
-        return entityManager;
+    private ConnectionFactory() {
+
     }
 
+    public static EntityManager getEntityManager() {
+
+        if (entityManagerFactory == null) {
+
+            try {
+                LOGGER.info("Criando EntityManager");
+                entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+            } catch (PersistenceException | NullPointerException e) {
+                LOGGER.log(Level.SEVERE, "Erro ao criar EntityMangerFactory");
+                throw e;
+            }
+
+        }
+
+        if (!entityManagerFactory.isOpen()) {
+            LOGGER.severe("Tentativa de usar um entityManager fechado");
+            throw new IllegalStateException("Entity manager is closed");
+        }
+
+        LOGGER.info("Criando entityManager");
+
+        return entityManagerFactory.createEntityManager();
+
+    }
+
+    public static void closeEntityManagerFactory (){
+        if (entityManagerFactory != null && entityManagerFactory.isOpen()){
+            entityManagerFactory.close();
+        }
+    }
+
+    public static void closeEntityManagerFactory (EntityManager em){
+        if (em != null && em.isOpen()){
+            em.close();
+        }
+    }
 
 }
+
+
