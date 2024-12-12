@@ -51,7 +51,7 @@ public class ConnectionFactory {
         }
     }
 
-    public static void closeEntityManagerFactory (EntityManager em){
+    public static void closeEntityManager (EntityManager em){
         if (em != null && em.isOpen()){
             em.close();
         }

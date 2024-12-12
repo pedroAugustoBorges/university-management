@@ -5,12 +5,13 @@ import org.pedro.domain.Enrollment;
 import java.util.List;
 import java.util.Optional;
 
-public interface IEnrollmentRepository extends GenericRepository <Enrollment, Integer> {
+public interface IEnrollmentRepository extends GenericRepository<Enrollment, Integer> {
 
     @Override
-    void save(Enrollment entity);
+    void save (Enrollment entity);
 
-    @Override
+    void save(Integer studentId, Integer courseId);
+
     void update(Enrollment entity);
 
     @Override
@@ -21,4 +22,8 @@ public interface IEnrollmentRepository extends GenericRepository <Enrollment, In
 
     @Override
     List<Enrollment> findAll();
+
+    List<Enrollment> findByIdStudent(Integer studentId);
+
+    List <Enrollment> findByIdCourse (Integer courseId);
 }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
+
 public class  Enrollment {
 
     @Id
@@ -24,6 +25,8 @@ public class  Enrollment {
     private Course course;
 
     private LocalDateTime localDateTime;
+
+
 
 
 }

@@ -86,7 +86,7 @@ public class CourseRepository implements ICourseRepository {
             throw e;
 
         } finally {
-            ConnectionFactory.closeEntityManagerFactory(em);
+            ConnectionFactory.closeEntityManager(em);
         }
     }
 }

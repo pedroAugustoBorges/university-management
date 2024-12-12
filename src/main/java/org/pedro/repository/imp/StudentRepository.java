@@ -85,7 +85,7 @@ public class StudentRepository implements IStudentRepository {
 
 
         }finally {
-            ConnectionFactory.closeEntityManagerFactory(em);
+            ConnectionFactory.closeEntityManager(em);
         }
 
         return null;
