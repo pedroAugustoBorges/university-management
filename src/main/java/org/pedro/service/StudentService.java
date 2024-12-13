@@ -64,7 +64,7 @@ public class StudentService {
 
     public List<Student> listAll (){
         List<Student> students = studentRepository.findAll();
-        return students != null ? students : new ArrayList<>();
+        return students.isEmpty()? new ArrayList<>(): students;
     }
 
 

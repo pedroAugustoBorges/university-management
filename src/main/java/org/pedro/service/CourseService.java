@@ -33,7 +33,7 @@ public class CourseService {
 
     public List<Course> findAll (){
         List<Course> courses = courseRepository.findAll();
-        return courses != null ? courses : new ArrayList<>();
+        return courses.isEmpty() ? new ArrayList<>() : courses;
     }
 
     public Optional<Course> findById (Integer integer){

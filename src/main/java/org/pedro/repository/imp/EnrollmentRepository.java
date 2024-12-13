@@ -11,7 +11,7 @@ import org.pedro.repository.IEnrollmentRepository;
 import org.pedro.repository.TransactionFunction;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +23,6 @@ public class EnrollmentRepository implements IEnrollmentRepository {
             Course course = em.find(Course.class, courseId);
 
             Student student = em.find(Student.class, studentId);
-
-            if (student == null){
-                throw new EntityNotFoundException("Student not found with id : " + studentId);
-            }
-            if (course == null){
-                throw new EntityNotFoundException("Course not found with id : " + courseId);
-            }
 
             Enrollment enrollment =  new Enrollment();
 
@@ -64,6 +57,8 @@ public class EnrollmentRepository implements IEnrollmentRepository {
         return Boolean.TRUE.equals(executeTransaction(em -> {
 
             Enrollment enrollment = em.find(Enrollment.class, integer);
+
+
 
             if (enrollment != null) {
                 em.remove(enrollment);
