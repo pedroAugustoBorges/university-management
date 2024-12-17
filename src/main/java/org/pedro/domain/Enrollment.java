@@ -1,13 +1,14 @@
 package org.pedro.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 
 public class  Enrollment {
@@ -26,7 +27,13 @@ public class  Enrollment {
 
     private LocalDateTime localDateTime;
 
-
-
-
+    @Override
+    public String toString() {
+        return "\nEnrollment:\n" +
+                "Id: " + id +
+                ", Student_Id: " + student.getStudent_id() +
+                ", Course_Id: " + course.getCourse_id() +
+                ", localDateTime: " + localDateTime +
+                "}";
+    }
 }

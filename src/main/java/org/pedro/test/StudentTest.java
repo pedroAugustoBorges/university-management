@@ -19,9 +19,9 @@ public class StudentTest {
         StudentService studentService = new StudentService(studentRepository);
 
         Student studentUpdate = new Student();
-
-        studentUpdate.setStudent_id(1);
-        studentUpdate.setName("Vanessa Marcone");
+//
+//        studentUpdate.setStudent_id(1);
+//        studentUpdate.setName("Vanessa Marcone");
 
 //        studentService.removeByid(3);
 

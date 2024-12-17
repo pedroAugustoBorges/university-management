@@ -16,21 +16,21 @@ public class CourseTest {
 
         Course course = new Course();
 
-        course.setTitle("Portuguese");
+        course.setTitle("Design");
 
-        course.setDescription("Course of Portuguese beginner");
+        course.setDescription("Tecnico of Design");
 
         CourseRepository courseRepository = new CourseRepository();
 
         CourseService courseService = new CourseService(courseRepository);
 
-//        courseService.save(course);
+        courseService.save(course);
 
 //        List<Course> courses = courseService.findAll();
 //
 //        System.out.println(courses);
 
-        boolean removed = courseService.removeById(3);
+//        boolean removed = courseService.removeById(3);
 
 
 //

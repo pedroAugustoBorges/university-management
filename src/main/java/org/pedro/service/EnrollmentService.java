@@ -1,7 +1,9 @@
 package org.pedro.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.pedro.domain.Course;
 import org.pedro.domain.Enrollment;
+import org.pedro.domain.Student;
 import org.pedro.repository.IEnrollmentRepository;
 
 
@@ -76,6 +78,29 @@ public class EnrollmentService {
 
         List<Enrollment> enrollments = enrollmentRepository.findByIdCourse(courseId);
         return enrollments.isEmpty() ? new ArrayList<>() : enrollments;
+    }
+
+    public Optional<Student> fetchStudentForUpdate (Integer studentId){
+        if (studentId == null){
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+
+        return enrollmentRepository.fetchStudentForUpdate(studentId);
+    }
+
+    public Optional<Course> fetchCourseForUpdate (Integer courseId){
+        if (courseId == null){
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+        return enrollmentRepository.fetchCourseForUpdate(courseId);
+    }
+
+    public boolean removeById (Integer enrollmentId){
+    enrollmentRepository.findById(enrollmentId).orElseThrow( () -> {
+        LOGGER.severe("Attempted remove with id " +  enrollmentId + ", but no such enrollment exists");
+        return new EntityNotFoundException("Enrollment is null");
+    });
+    return enrollmentRepository.removeById(enrollmentId);
     }
 
 

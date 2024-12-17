@@ -2,6 +2,7 @@ package org.pedro.repository.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import org.pedro.connection.ConnectionFactory;
 import org.pedro.domain.Course;
@@ -20,9 +21,19 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     @Override
     public void save(Integer studentId, Integer courseId) {
         executeTransaction(em -> {
+
             Course course = em.find(Course.class, courseId);
 
+            if (course == null){
+                throw new EntityNotFoundException("Course is null because course with id " + courseId +  " not found in database");
+            }
+
             Student student = em.find(Student.class, studentId);
+
+            if (student == null) {
+                throw new EntityNotFoundException("Student is null because student with id " + studentId + "  not found in database");
+            }
+
 
             Enrollment enrollment =  new Enrollment();
 
@@ -106,6 +117,38 @@ public class EnrollmentRepository implements IEnrollmentRepository {
         return executeTransaction(em -> em.createQuery(jpql, Enrollment.class).setParameter("courseId", courseId).getResultList());
     }
 
+    @Override
+    public Optional<Student> fetchStudentForUpdate(Integer studentId){
+        String jpql = "SELECT s FROM Student s " +
+                "WHERE s.student_id = :studentId";
+
+        try{
+            Student student = executeTransaction(em -> em.createQuery(jpql, Student.class).setParameter("studentId", studentId).getSingleResult());
+
+            return Optional.of(student);
+        }catch (NoResultException e){
+            e.printStackTrace();
+            return Optional.empty();
+        }
+
+    }
+
+    @Override
+    public Optional<Course> fetchCourseForUpdate(Integer courseId)  {
+        String jpql = "SELECT c FROM Course c " +
+                "WHERE c.course_id = :courseId";
+
+        try{
+            Course course = executeTransaction(em -> em.createQuery(jpql, Course.class).setParameter("courseId", courseId).getSingleResult());
+
+            return Optional.of(course);
+        }catch (NoResultException e){
+            e.printStackTrace();
+            return Optional.empty();
+        }
+
+    }
+
     private <T> T executeTransaction (TransactionFunction<T> function){
         EntityManager em = ConnectionFactory.getEntityManager();
 
@@ -123,11 +166,10 @@ public class EnrollmentRepository implements IEnrollmentRepository {
             if (em.getTransaction().isActive()){
                 em.getTransaction().rollback();
             }
+            throw e;
         }finally {
             ConnectionFactory.closeEntityManager(em);
         }
 
-
-       return null;
     }
 }
