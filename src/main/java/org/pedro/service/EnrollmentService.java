@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.pedro.domain.Course;
 import org.pedro.domain.Enrollment;
 import org.pedro.domain.Student;
+import org.pedro.exceptions.GenericNotFoundException;
 import org.pedro.repository.IEnrollmentRepository;
 
 
@@ -31,7 +32,7 @@ public class EnrollmentService {
 
     public void save (Enrollment enrollment){
         if (enrollment == null){
-            throw new EntityNotFoundException("Enrollment can't be null");
+            throw new GenericNotFoundException("Enrollment can't be null");
         }
 
         enrollmentRepository.save(enrollment);
@@ -53,11 +54,11 @@ public class EnrollmentService {
     public void update (Enrollment enrollment){
 
         if (enrollment == null){
-            throw new IllegalArgumentException("Enrollment can't be null");
+            throw new GenericNotFoundException("Enrollment can't be null");
         }
         Optional<Enrollment> enrollmentSearched = enrollmentRepository.findById(enrollment.getId());
 
-        enrollmentSearched.orElseThrow(() -> new EntityNotFoundException("Enrollment with id : " + enrollment.getId() + " not found"));
+        enrollmentSearched.orElseThrow(() -> new GenericNotFoundException("Enrollment", enrollment.getId()));
 
         enrollmentRepository.update(enrollment);
     }
@@ -98,7 +99,7 @@ public class EnrollmentService {
     public boolean removeById (Integer enrollmentId){
     enrollmentRepository.findById(enrollmentId).orElseThrow( () -> {
         LOGGER.severe("Attempted remove with id " +  enrollmentId + ", but no such enrollment exists");
-        return new EntityNotFoundException("Enrollment is null");
+        return new GenericNotFoundException("Enrollment", enrollmentId);
     });
     return enrollmentRepository.removeById(enrollmentId);
     }

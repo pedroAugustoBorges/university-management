@@ -46,10 +46,11 @@ public class EnrollmentTest {
 
 //        System.out.println(enrollmentService.findByIdCourse(1));
 
-        enrollmentService.removeById(6);
+//        enrollmentService.removeById(22);
 
-        System.out.println(enrollmentService.findAll());
+//        System.out.println(enrollmentService.findAll());
 
+        System.out.println(enrollmentService.fetchStudentForUpdate(139).get());
 
 
     }

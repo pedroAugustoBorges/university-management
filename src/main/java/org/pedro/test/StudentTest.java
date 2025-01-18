@@ -23,7 +23,7 @@ public class StudentTest {
 //        studentUpdate.setStudent_id(1);
 //        studentUpdate.setName("Vanessa Marcone");
 
-//        studentService.removeByid(3);
+//        studentService.removeById(3);
 
 //
 //        studentService.save(student);

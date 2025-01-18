@@ -24,11 +24,11 @@ public class CourseTest {
 
         CourseService courseService = new CourseService(courseRepository);
 
-        courseService.save(course);
+//        courseService.save(course);
 
-//        List<Course> courses = courseService.findAll();
-//
-//        System.out.println(courses);
+        List<Course> courses = courseService.findAll();
+
+        System.out.println(courses);
 
 //        boolean removed = courseService.removeById(3);
 

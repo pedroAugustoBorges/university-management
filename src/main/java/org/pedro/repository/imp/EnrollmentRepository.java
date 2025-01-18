@@ -8,6 +8,7 @@ import org.pedro.connection.ConnectionFactory;
 import org.pedro.domain.Course;
 import org.pedro.domain.Enrollment;
 import org.pedro.domain.Student;
+import org.pedro.exceptions.GenericNotFoundException;
 import org.pedro.repository.IEnrollmentRepository;
 import org.pedro.repository.TransactionFunction;
 
@@ -127,8 +128,7 @@ public class EnrollmentRepository implements IEnrollmentRepository {
 
             return Optional.of(student);
         }catch (NoResultException e){
-            e.printStackTrace();
-            return Optional.empty();
+            throw new GenericNotFoundException("Student", studentId);
         }
 
     }

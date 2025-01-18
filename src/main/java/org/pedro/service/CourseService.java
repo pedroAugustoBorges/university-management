@@ -3,6 +3,7 @@ package org.pedro.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.pedro.domain.Course;
+import org.pedro.exceptions.GenericNotFoundException;
 import org.pedro.repository.ICourseRepository;
 
 
@@ -25,7 +26,7 @@ public class CourseService {
     public void save (Course course){
 
         if (course == null){
-            throw new IllegalArgumentException("Course is null");
+            throw new GenericNotFoundException("Course", course.getCourse_id());
         }
 
         courseRepository.save(course);
@@ -50,7 +51,7 @@ public class CourseService {
         if (courseSearched.isPresent()){
             courseRepository.update(course);
         }else {
-            throw new EntityNotFoundException("Course not found");
+            throw new GenericNotFoundException("Course", course.getCourse_id());
         }
     }
 
@@ -58,7 +59,7 @@ public class CourseService {
         courseRepository.findById(integer).
                 orElseThrow(() -> {
                     LOGGER.warning("Attepted to remove a course with id  " + integer + " , but no such course exits ");
-                    return new EntityNotFoundException("Course is null");
+                    return new GenericNotFoundException("Course", integer);
                 });
 
         courseRepository.removeById(integer);
