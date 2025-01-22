@@ -25,8 +25,8 @@ public class StudentTest {
 
 //        studentService.removeById(3);
 
-//
 //        studentService.save(student);
+//
 
         List<Student> students = studentService.listAll();
 

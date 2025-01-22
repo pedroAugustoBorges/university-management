@@ -149,6 +149,16 @@ public class EnrollmentRepository implements IEnrollmentRepository {
 
     }
 
+    @Override
+    public List<Enrollment> findAllWithLeftJoin() {
+
+        String jpql = "SELECT e FROM Enrollment e " +
+                "LEFT JOIN FETCH e.course c " +
+                "LEFT JOIN FETCH e.student s";
+
+        return executeTransaction(em -> em.createQuery(jpql, Enrollment.class).getResultList());
+    }
+
     private <T> T executeTransaction (TransactionFunction<T> function){
         EntityManager em = ConnectionFactory.getEntityManager();
 

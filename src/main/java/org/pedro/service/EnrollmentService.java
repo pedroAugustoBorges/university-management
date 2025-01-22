@@ -104,6 +104,14 @@ public class EnrollmentService {
     return enrollmentRepository.removeById(enrollmentId);
     }
 
+    public List<Enrollment> findAllWithLeftJoin (){
+        List<Enrollment> list = enrollmentRepository.findAllWithLeftJoin();
+
+        return list.isEmpty() ? new ArrayList<>() : list;
+    }
+
+
+
 
 
 

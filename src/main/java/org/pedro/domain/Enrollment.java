@@ -32,8 +32,8 @@ public class  Enrollment {
     public String toString() {
         return "\nEnrollment:\n" +
                 "Id: " + id +
-                ", Student_Id: " + student.getStudent_id() +
-                ", Course_Id: " + course.getCourse_id() +
+                ", Student_Id: " + (student != null ? student.getStudent_id() : "null")+
+                ", Course_Id: " + (course != null ? course.getCourse_id() : "null") +
                 ", localDateTime: " + localDateTime +
                 "}";
     }

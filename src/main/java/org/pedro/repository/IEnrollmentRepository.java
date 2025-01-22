@@ -32,4 +32,6 @@ public interface IEnrollmentRepository extends GenericRepository<Enrollment, Int
     Optional<Student> fetchStudentForUpdate (Integer studentId);
 
     Optional<Course> fetchCourseForUpdate (Integer courseId);
+
+    List<Enrollment> findAllWithLeftJoin();
 }

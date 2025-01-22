@@ -17,12 +17,8 @@ public class EnrollmentTest {
 
         EnrollmentService enrollmentService = new EnrollmentService(enrollmentRepository);
 
-//        enrollmentService.save(3, 1);
-//        enrollmentService.save(2, 5);
-//        enrollmentService.save(1, 5);
-//        enrollmentService.save(1, 4);
-//        enrollmentService.save(2, 6 );
-//        enrollmentService.save(3, 6);
+//        enrollmentService.save(3, 7);
+//
 
 
 //        Course course = enrollmentService.fetchCourseForUpdate(1).get();
@@ -50,8 +46,11 @@ public class EnrollmentTest {
 
 //        System.out.println(enrollmentService.findAll());
 
-        System.out.println(enrollmentService.fetchStudentForUpdate(139).get());
+//        System.out.println(enrollmentService.fetchStudentForUpdate(139).get());
 
+        System.out.println( enrollmentService.findAllWithLeftJoin());
+
+        System.out.println(enrollmentService.findAll());
 
     }
 }
